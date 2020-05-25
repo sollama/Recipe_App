@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Recipe_App</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="no_recipes">No recipes!</string>
+    <string name="hint_recipe">Recipe Name</string>
+    <string name="save_recipe_button">save recipe</string>
+    <string name="not_saved">empty_not_saved</string>
+    <string name="empty_not_saved">empty_not_saved</string>
+    <string name="hint_prepTime">e.g. 20 min</string>
+    <string name="hint_cookTime">e.g. 20 min</string>
+    <string name="hint_tag">e.g. Breakfast</string>
+    <string name="cancel_recipe_button">Cancel</string>
+    <string name="update_recipe_button">Update</string>
+    <string name="updated">Note updated</string>
+</resources>
