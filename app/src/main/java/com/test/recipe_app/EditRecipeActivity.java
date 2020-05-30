@@ -1,9 +1,11 @@
 package com.test.recipe_app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -26,6 +28,7 @@ public class EditRecipeActivity extends AppCompatActivity {
     public static final String UPDATED_RECIPE_COOKTIME = "updated_cookTime";
     public static final String UPDATED_RECIPE_INGREDIENTS = "updated_ingredients";
     public static final String UPDATED_RECIPE_INSTRUCTIONS = "updated_instructions";
+    public static final String UPDATED_RECIPE_WANTTOMAKE = "updated_wantToMake";
 
     private EditText editRecipeName;
     private EditText editTag;
@@ -34,16 +37,28 @@ public class EditRecipeActivity extends AppCompatActivity {
     private EditText editIngredients;
     private EditText editInstructions;
     private ImageButton editWantToMake;
+    private boolean wantToMake;
     EditRecipeViewModel recipeModel;
     private Bundle bundle;
     private String id;
     private LiveData<Recipe> recipe;
 
     @Override
+    public void onUserInteraction() {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //xml underscore
         setContentView(R.layout.activity_edit_recipe);
+        getSupportActionBar().setTitle("Edit Recipe");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         editRecipeName = findViewById(R.id.edit_recipe);
         editTag = findViewById(R.id.edit_tag);
         editPrepTime = findViewById(R.id.edit_prepTime);
@@ -53,14 +68,13 @@ public class EditRecipeActivity extends AppCompatActivity {
         editWantToMake = findViewById(R.id.edit_wantToMake);
 
         bundle = getIntent().getExtras();
-
-        if(bundle != null) {
+        if (bundle != null) {
             id = bundle.getString("recipe_id");
         }
 
         recipeModel = ViewModelProviders.of(this).get(EditRecipeViewModel.class);
         recipe = recipeModel.getRecipe(id);
-        Log.d(TAG , "id" + id);
+        Log.d(TAG, "id" + id);
 
 
         recipe.observe(this, new Observer<Recipe>() {
@@ -70,18 +84,39 @@ public class EditRecipeActivity extends AppCompatActivity {
                     String recipeName = recipe.getName();
                     String recipeIng = recipe.getIngredients();
                     String recipeInstruc = recipe.getInstructions();
-                    String recipePrep = String.valueOf(recipe.getPrepTime());
-                    Log.d(TAG, "Name: "+ recipeName + ", Ingredients: " + recipeIng + ", Instructions: " + recipeInstruc);
+                    Log.d(TAG, "Name: " + recipeName + ", Ingredients: " + recipeIng + ", Instructions: " + recipeInstruc);
                     editRecipeName.setText(recipe.getName());
                     editTag.setText(recipe.getTag());
                     editPrepTime.setText(recipe.getPrepTime());
                     editCookTime.setText(recipe.getCookTime());
                     editIngredients.setText(recipe.getIngredients());
                     editInstructions.setText(recipe.getInstructions());
+
+                    if (recipe.getWantToMake()) {
+                        wantToMake = true;
+                        editWantToMake.setImageResource(R.drawable.star_24px);
+                    } else {
+                        wantToMake = false;
+                        editWantToMake.setImageResource(R.drawable.star_outline_24px);
+                    }
+
                 } else {
                     Log.e(TAG, "recipe null");
                 }
 
+            }
+        });
+
+        editWantToMake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "wantToMake: " + wantToMake);
+                wantToMake = !wantToMake;
+                if (wantToMake) {
+                    editWantToMake.setImageResource(R.drawable.star_24px);
+                } else {
+                    editWantToMake.setImageResource(R.drawable.star_outline_24px);
+                }
             }
         });
     }
@@ -95,6 +130,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         String eCookTime = String.valueOf(editCookTime.getText());
         String eIngredients = editIngredients.getText().toString();
         String eInstructions = editInstructions.getText().toString();
+        boolean recipeWantToMake = Boolean.valueOf(wantToMake);
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra(RECIPE_ID, eRecipeId);
@@ -104,7 +140,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         resultIntent.putExtra(UPDATED_RECIPE_COOKTIME, eCookTime);
         resultIntent.putExtra(UPDATED_RECIPE_INGREDIENTS, eIngredients);
         resultIntent.putExtra(UPDATED_RECIPE_INSTRUCTIONS, eInstructions);
-
+        resultIntent.putExtra(UPDATED_RECIPE_WANTTOMAKE, recipeWantToMake);
         setResult(RESULT_OK, resultIntent);
         finish();
     }

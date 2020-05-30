@@ -22,27 +22,28 @@ public class Recipe {
     public int servings;
     public String ingredients;
     public String instructions;
+    public byte[] image;
+
 
     public Recipe(@NonNull String id, @NonNull String recipe, @NonNull String tag, boolean wantToMake,
-                  @NonNull String prepTime, @NonNull String cookTime, @NonNull String ingredients, @NonNull String instructions) {
+                  @NonNull String prepTime, @NonNull String cookTime, @NonNull String ingredients,
+                  @NonNull String instructions, byte[] image) {
         this.id = id;
         this.recipe = recipe;
         this.tag = tag;
-        this.wantToMake = false;
+        this.wantToMake = wantToMake;
         this.cookTime = cookTime;
         this.prepTime = prepTime;
         this.ingredients = ingredients;
         this.instructions = instructions;
+        this.image = image;
     }
 
-    public Recipe() {
-
-    }
+    public Recipe() { }
 
     public String getRecipe() {
         return recipe;
     }
-
 
     public String getId() {
         return id;
@@ -84,8 +85,12 @@ public class Recipe {
 
     public void setInstructions(String instructions) { this.instructions = instructions; }
 
+    public byte[] getImage() { return image; }
+
+    public void setImage(byte[] image) { this.image = image; }
+
     @Override
     public String toString() {
-        return "Name: " + recipe + " Tag: " + tag;
+        return "Name: " + recipe + " Tag: " + tag + " WantToMake " + wantToMake;
     }
 }
