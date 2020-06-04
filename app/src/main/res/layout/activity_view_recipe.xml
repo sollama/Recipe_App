@@ -26,6 +26,7 @@
                 android:id="@+id/view_recipe_image"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/rounded_corner"
                 tools:srcCompat="android:drawable/picture_frame" />
 
@@ -107,11 +108,6 @@
 
             </LinearLayout>
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1.5dp"
-                android:background="#78B9B1" />
 
             <TabHost
                 android:id="@+id/tab_host"
@@ -119,11 +115,6 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true">
-
-                <TabWidget
-                    android:id="@android:id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
 
                 <FrameLayout
                     android:id="@android:id/tabcontent"
@@ -143,9 +134,15 @@
                             android:layout_marginTop="60dp"
                             android:background="@drawable/rounded_corner"
                             android:ems="10"
+                            android:fontFamily="@font/montserrat"
                             android:gravity="start|top"
                             android:inputType="textMultiLine"
                             android:padding="10dp" />
+
+                        <TabWidget
+                            android:id="@android:id/tabs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
 
                     </LinearLayout>
 
@@ -156,21 +153,22 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_marginTop="60dp"
                             android:id="@+id/view_instructions"
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
+                            android:layout_marginTop="60dp"
                             android:background="@drawable/rounded_corner"
                             android:ems="10"
+                            android:fontFamily="@font/montserrat"
                             android:gravity="start|top"
                             android:inputType="textMultiLine"
-                            android:padding="10dp"/>
+                            android:padding="10dp" />
 
                     </LinearLayout>
 
                 </FrameLayout>
-        </TabHost>
-    </LinearLayout>
-</ScrollView>
+            </TabHost>
+        </LinearLayout>
+    </ScrollView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

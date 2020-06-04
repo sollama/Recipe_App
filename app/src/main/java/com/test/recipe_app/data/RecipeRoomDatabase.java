@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.test.recipe_app.model.Recipe;
 
-@Database(entities = {Recipe.class}, version = 7)
+@Database(entities = {Recipe.class}, version = 15)
 public abstract class RecipeRoomDatabase extends RoomDatabase {
 
     public static volatile RecipeRoomDatabase INSTANCE;

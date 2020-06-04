@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,7 +28,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -35,21 +35,27 @@ public class NewRecipeActivity extends AppCompatActivity {
 
     final int REQUEST_CODE_GALLERY = 999;
     private static final String TAG = "NewRecipeActivity";
-    public static final String EXTRA_RECIPE_NAME = "EXTRA_RECIPE_NAME";
-    public static final String EXTRA_RECIPE_TAG = "EXTRA_RECIPE_TAG";
-    public static final String EXTRA_RECIPE_INSTRUCTIONS = "EXTRA_RECIPE_INSTRUCTIONS";
-    public static final String EXTRA_RECIPE_INGREDIENTS = "EXTRA_RECIPE_INGREDIENTS";
-    public static final String EXTRA_RECIPE_PREPTIME = "EXTRA_RECIPE_PREPTIME";
-    public static final String EXTRA_RECIPE_COOKTIME = "EXTRA_RECIPE_COOKTIME";
-    public static final String EXTRA_RECIPE_WANTTOMAKE = "EXTRA_RECIPE_WANTTOMAKE";
-    public static final String EXTRA_RECIPE_IMAGE = "EXTRA_RECIPE_IMAGE";
+    public static final String EXTRA_RECIPE_NAME = "EXTRA_RECIPE_NAME",
+            EXTRA_RECIPE_TAG = "EXTRA_RECIPE_TAG",
+            EXTRA_RECIPE_INSTRUCTIONS = "EXTRA_RECIPE_INSTRUCTIONS",
+            EXTRA_RECIPE_INGREDIENTS = "EXTRA_RECIPE_INGREDIENTS",
+            EXTRA_RECIPE_PREPTIME = "EXTRA_RECIPE_PREPTIME",
+            EXTRA_RECIPE_COOKTIME = "EXTRA_RECIPE_COOKTIME",
+            EXTRA_RECIPE_WANTTOMAKE = "EXTRA_RECIPE_WANTTOMAKE",
+            IMAGE_URI = "IMAGE_URI";
 
-    private EditText rName, rTag, rInstructions, rIngredients, rPrepTime, rCookTime;
+    private EditText rName,
+            rTag,
+            rInstructions,
+            rIngredients,
+            rPrepTime,
+            rCookTime;
     private Button sButton, cButton;
     private ImageButton wantToMakeButton, uploadImage;
     private boolean wantToMake = false;
     private Toolbar toolbar;
     ImageView recipeImageView;
+    private Uri uri;
 
     @Override
     public void onUserInteraction() {
@@ -148,29 +154,36 @@ public class NewRecipeActivity extends AppCompatActivity {
         sButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent replyIntent = new Intent();
-                String recipeNameSt = rName.getText().toString();
-                String recipeTagSt = rTag.getText().toString();
-                String recipeIngredientsSt = rIngredients.getText().toString();
-                String recipeInstructionsSt = rInstructions.getText().toString();
-                String recipePrepTimeSt = String.valueOf(rPrepTime.getText());
-                String recipeCookTimeSt = String.valueOf(rCookTime.getText());
-                boolean recipeWantToMake = Boolean.valueOf(wantToMake);
-                byte[] recipeImage = imageViewToByte(recipeImageView);
-                Log.d(TAG, "rWantToMake: " + " recipeWantToMake" + recipeWantToMake);
-                Log.d(TAG, "recipeImage" + recipeImage);
+                try {
+                    Intent replyIntent = new Intent();
+                    String recipeNameSt = rName.getText().toString();
+                    String recipeTagSt = rTag.getText().toString();
+                    String recipeIngredientsSt = rIngredients.getText().toString();
+                    String recipeInstructionsSt = rInstructions.getText().toString();
+                    String recipePrepTimeSt = String.valueOf(rPrepTime.getText());
+                    String recipeCookTimeSt = String.valueOf(rCookTime.getText());
+                    boolean recipeWantToMake = Boolean.valueOf(wantToMake);
 
-                //Log.d(TAG, "prepTime: " + recipePrepTimeSt + ", recipeIngredientsSt: " + recipeIngredientsSt);
-                replyIntent.putExtra(EXTRA_RECIPE_NAME, recipeNameSt);
-                replyIntent.putExtra(EXTRA_RECIPE_TAG, recipeTagSt);
-                replyIntent.putExtra(EXTRA_RECIPE_INGREDIENTS, recipeIngredientsSt);
-                replyIntent.putExtra(EXTRA_RECIPE_INSTRUCTIONS, recipeInstructionsSt);
-                replyIntent.putExtra(EXTRA_RECIPE_PREPTIME, recipePrepTimeSt);
-                replyIntent.putExtra(EXTRA_RECIPE_COOKTIME, recipeCookTimeSt);
-                replyIntent.putExtra(EXTRA_RECIPE_WANTTOMAKE, recipeWantToMake);
-                replyIntent.putExtra(EXTRA_RECIPE_IMAGE, recipeImage);
-                setResult(RESULT_OK, replyIntent);
-                finish();
+                    //byte[] recipeImage = imageViewToByte(recipeImageView);
+                    Log.d(TAG, "rWantToMake: " + " recipeWantToMake" + recipeWantToMake);
+
+
+                    //Log.d(TAG, "prepTime: " + recipePrepTimeSt + ", recipeIngredientsSt: " + recipeIngredientsSt);
+                    replyIntent.putExtra(EXTRA_RECIPE_NAME, recipeNameSt);
+                    replyIntent.putExtra(EXTRA_RECIPE_TAG, recipeTagSt);
+                    replyIntent.putExtra(EXTRA_RECIPE_INGREDIENTS, recipeIngredientsSt);
+                    replyIntent.putExtra(EXTRA_RECIPE_INSTRUCTIONS, recipeInstructionsSt);
+                    replyIntent.putExtra(EXTRA_RECIPE_PREPTIME, recipePrepTimeSt);
+                    replyIntent.putExtra(EXTRA_RECIPE_COOKTIME, recipeCookTimeSt);
+                    replyIntent.putExtra(EXTRA_RECIPE_WANTTOMAKE, recipeWantToMake);
+                    replyIntent.putExtra(IMAGE_URI, uri.toString());
+
+                    setResult(RESULT_OK, replyIntent);
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
             }
         });
     }
@@ -187,24 +200,16 @@ public class NewRecipeActivity extends AppCompatActivity {
         }
     }
 
-    public static byte[] imageViewToByte(ImageView image) {
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if(requestCode == REQUEST_CODE_GALLERY){
-            if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Intent intent = new Intent(Intent.ACTION_PICK);
+        if (requestCode == REQUEST_CODE_GALLERY) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_CODE_GALLERY);
-            }
-            else {
+            } else {
                 Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
             }
             return;
@@ -216,14 +221,17 @@ public class NewRecipeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
-            Uri uri = data.getData();
+        //set image
+        if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null) {
+            uri = data.getData();
+            Log.d(TAG, "uri" + uri);
+            Log.d(TAG, "uri.toString" + uri.toString());
 
             try {
                 InputStream inputStream = getContentResolver().openInputStream(uri);
-
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 recipeImageView.setImageBitmap(bitmap);
+                recipeImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

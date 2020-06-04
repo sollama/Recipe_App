@@ -1,11 +1,12 @@
 package com.test.recipe_app.ui;
 
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -27,6 +27,8 @@ import com.test.recipe_app.ViewRecipeActivity;
 import com.test.recipe_app.model.EditRecipeViewModel;
 import com.test.recipe_app.model.Recipe;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
@@ -69,7 +71,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder recipeViewHolder, int position) {
 
-        if(recipeList != null) {
+        if (recipeList != null) {
             Recipe recipe = recipeList.get(position);
             recipeViewHolder.setData(recipe, position);
 
@@ -84,10 +86,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             recipeViewHolder.recipeTextView.setText(recipe.getRecipe());
             recipeViewHolder.recipeTagTextView.setText("" + recipe.getTag());
 
-            //convert & display image
-            byte[] image = recipe.getImage();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
-            recipeViewHolder.recipeImage.setImageBitmap(bitmap);
+            try {
+                //convert & display image
+                Uri imageUri = Uri.parse(recipe.getImage());
+                InputStream inputStream = mContext.getApplicationContext().getContentResolver().openInputStream(imageUri);
+
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                recipeViewHolder.recipeImage.setImageBitmap(bitmap);
+                recipeViewHolder.recipeImage.setBackground(null);
+                recipeViewHolder.recipeImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 
             recipeViewHolder.setListener();
         } else {
@@ -98,14 +108,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
-        public TextView recipeTextView;
-        public TextView recipeTagTextView;
-        private ImageView recipeDelete;
-        private ImageView recipeEdit;
+        public TextView recipeTextView, recipeTagTextView;
+        private ImageView recipeDelete, recipeEdit, recipeImage;
         public int mPosition;
         public ImageButton recipeWantToMake;
         public CardView recipeView;
-        public ImageView recipeImage;
 
 
         public RecipeViewHolder(@NonNull View itemView) {
@@ -133,8 +140,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, ViewRecipeActivity.class);
-                    intent.putExtra("recipe_id",recipeList.get(mPosition).getId());
-                    ((Activity)mContext).startActivityForResult(intent, MainActivity.VIEW_RECIPE_ACTIVITY_REQUEST_CODE);
+                    intent.putExtra("recipe_id", recipeList.get(mPosition).getId());
+                    ((Activity) mContext).startActivityForResult(intent, MainActivity.VIEW_RECIPE_ACTIVITY_REQUEST_CODE);
 
                 }
             });
@@ -143,11 +150,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, EditRecipeActivity.class);
-                    intent.putExtra("recipe_id",recipeList.get(mPosition).getId());
-                    Log.d(TAG , "mPosition: " + mPosition);
-                    Log.d(TAG , "recipe_id: " + recipeList.get(mPosition).getId());
+                    intent.putExtra("recipe_id", recipeList.get(mPosition).getId());
+                    Log.d(TAG, "mPosition: " + mPosition);
+                    Log.d(TAG, "recipe_id: " + recipeList.get(mPosition).getId());
 
-                    ((Activity)mContext).startActivityForResult(intent, MainActivity.UPDATE_RECIPE_ACTIVITY_REQUEST_CODE);
+                    ((Activity) mContext).startActivityForResult(intent, MainActivity.UPDATE_RECIPE_ACTIVITY_REQUEST_CODE);
                 }
             });
 

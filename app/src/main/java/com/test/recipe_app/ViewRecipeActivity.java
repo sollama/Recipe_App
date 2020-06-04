@@ -1,15 +1,21 @@
 package com.test.recipe_app;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.EditText;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -17,24 +23,24 @@ import androidx.lifecycle.ViewModelProviders;
 import com.test.recipe_app.model.EditRecipeViewModel;
 import com.test.recipe_app.model.Recipe;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 public class ViewRecipeActivity extends AppCompatActivity {
     private static final String TAG = "ViewRecipeActivity";
 
-    private String recipeName;
-    private TextView viewTag;
-    private TextView viewPrepTime;
-    private TextView viewCookTime;
-    private TextView viewIngredients;
-    private TextView viewInstructions;
+    private String recipeName,
+            id;
+    private TextView viewTag,
+            viewPrepTime,
+            viewCookTime,
+            viewIngredients,
+            viewInstructions;
     private ImageButton viewWantToMake;
     private boolean wantToMake;
-    private TabHost tabHost;
     private ImageView viewImage;
-
-
     EditRecipeViewModel recipeModel;
     private Bundle bundle;
-    private String id;
     private LiveData<Recipe> recipe;
 
 
@@ -42,7 +48,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recipe);
-        getSupportActionBar().setTitle(recipeName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewTag = findViewById(R.id.view_tag);
@@ -52,8 +57,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         viewIngredients = findViewById(R.id.view_ingredients);
         viewInstructions = findViewById(R.id.view_instructions);
         viewImage = findViewById(R.id.view_recipe_image);
-        //toolbar = findViewById(R.id.toolbar_view);
-        //toolbar.Title(recipeName);
+
 
         bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -68,14 +72,16 @@ public class ViewRecipeActivity extends AppCompatActivity {
             @Override
             public void onChanged(Recipe recipe) {
                 if (recipe != null) {
-
                     recipeName = recipe.getName();
+                    getSupportActionBar().setTitle(recipeName);
+                    Log.d(TAG, "recipeName" + recipeName);
                     Log.d(TAG, "recipe.getName()" + recipe.getName());
                     viewTag.setText(recipe.getTag());
                     viewPrepTime.setText(recipe.getPrepTime());
                     viewCookTime.setText(recipe.getCookTime());
                     viewIngredients.setText(recipe.getIngredients());
                     viewInstructions.setText(recipe.getInstructions());
+
 
                     //Log.d(TAG, "recipe.getTag()" + recipe.getTag());
 
@@ -88,6 +94,18 @@ public class ViewRecipeActivity extends AppCompatActivity {
                         viewWantToMake.setImageResource(R.drawable.star_outline_24px);
                     }
 
+                    try {
+                        //convert & display image
+                        Uri imageUri = Uri.parse(recipe.getImage());
+                        InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        viewImage.setImageBitmap(bitmap);
+                        viewImage.setBackground(null);
+                        viewImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
                     Log.e(TAG, "recipe null");
                 }
@@ -95,7 +113,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             }
         });
 
-        TabHost host = (TabHost)findViewById(R.id.tab_host);
+        TabHost host = findViewById(R.id.tab_host);
         host.setup();
 
         //Ingredients Tab
@@ -110,6 +128,17 @@ public class ViewRecipeActivity extends AppCompatActivity {
         spec.setIndicator("Instructions");
         host.addTab(spec);
 
+        final Typeface typeface = ResourcesCompat.getFont(getApplicationContext(),
+                R.font.montserrat_reg);
+
+        final TabWidget tw = host.findViewById(android.R.id.tabs);
+        for (int i = 0; i < tw.getChildCount(); ++i)
+        {
+            final View tabView = tw.getChildTabViewAt(i);
+            final TextView tv = (TextView)tabView.findViewById(android.R.id.title);
+            tv.setTextSize(18);
+            tv.setTypeface(typeface);
+        }
 
     }
 

@@ -22,6 +22,17 @@
             android:background="@drawable/rounded_corner"
             tools:srcCompat="android:drawable/picture_frame" />
 
+        <ImageButton
+            android:id="@+id/edit_image"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+            android:background="#E3ECEB"
+            android:padding="6dp"
+            app:srcCompat="@drawable/ic_edit_24px" />
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -40,7 +51,7 @@
                 android:textSize="18sp" />
 
             <ImageButton
-                android:id="@+id/edit_wantToMake"
+                android:id="@+id/edit_want_to_make"
                 android:layout_width="50dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
@@ -107,9 +118,9 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/rounded_corner"
                 android:fontFamily="@font/montserrat"
+                android:inputType="textAutoComplete"
                 android:padding="6dp"
-                android:textSize="18sp"
-                android:inputType="textAutoComplete"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/edit_cookTimeTag"
@@ -131,9 +142,9 @@
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/rounded_corner"
                 android:fontFamily="@font/montserrat"
+                android:inputType="textAutoComplete"
                 android:padding="6dp"
-                android:textSize="18sp"
-                android:inputType="textAutoComplete"/>
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -156,7 +167,7 @@
             android:background="@drawable/rounded_corner"
             android:ems="10"
             android:gravity="start|top"
-            android:inputType="textMultiLine|textAutoComplete"  />
+            android:inputType="textMultiLine|textAutoComplete" />
 
         <TextView
             android:id="@+id/edit_instructionsTag"

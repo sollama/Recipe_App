@@ -1,5 +1,7 @@
 package com.test.recipe_app.model;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -22,12 +24,12 @@ public class Recipe {
     public int servings;
     public String ingredients;
     public String instructions;
-    public byte[] image;
+    public String image;
 
 
     public Recipe(@NonNull String id, @NonNull String recipe, @NonNull String tag, boolean wantToMake,
                   @NonNull String prepTime, @NonNull String cookTime, @NonNull String ingredients,
-                  @NonNull String instructions, byte[] image) {
+                  @NonNull String instructions, String image) {
         this.id = id;
         this.recipe = recipe;
         this.tag = tag;
@@ -85,9 +87,9 @@ public class Recipe {
 
     public void setInstructions(String instructions) { this.instructions = instructions; }
 
-    public byte[] getImage() { return image; }
+    public String getImage() { return image; }
 
-    public void setImage(byte[] image) { this.image = image; }
+    public void setImage(String image) { this.image = image; }
 
     @Override
     public String toString() {

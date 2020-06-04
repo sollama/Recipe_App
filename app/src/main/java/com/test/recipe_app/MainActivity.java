@@ -1,6 +1,10 @@
 package com.test.recipe_app;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,8 +24,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,8 +74,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnD
                 Log.d(TAG, "Recipes: " + recipes);
             }
         });
-
-
     }
 
     @Override
@@ -92,12 +98,21 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnD
         return super.onOptionsItemSelected(item);
     }
 
+    public static byte[] imageViewToByte(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_RECIPE_REQUEST_CODE && resultCode == RESULT_OK) {
             final String recipe_id = UUID.randomUUID().toString();
+
             Recipe recipe = new Recipe(recipe_id, data.getStringExtra(NewRecipeActivity.EXTRA_RECIPE_NAME),
                     data.getStringExtra(NewRecipeActivity.EXTRA_RECIPE_TAG),
                     data.getBooleanExtra(NewRecipeActivity.EXTRA_RECIPE_WANTTOMAKE, true),
@@ -105,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnD
                     data.getStringExtra(NewRecipeActivity.EXTRA_RECIPE_COOKTIME),
                     data.getStringExtra(NewRecipeActivity.EXTRA_RECIPE_INGREDIENTS),
                     data.getStringExtra(NewRecipeActivity.EXTRA_RECIPE_INSTRUCTIONS),
-                    data.getByteArrayExtra(NewRecipeActivity.EXTRA_RECIPE_IMAGE));
+                    data.getStringExtra(NewRecipeActivity.IMAGE_URI));
             Log.d(TAG, "rWantToMake: " + " data.getBooleanExtra(NewRecipeActivity.EXTRA_RECIPE_WANTTOMAKE" + data.getBooleanExtra(NewRecipeActivity.EXTRA_RECIPE_WANTTOMAKE, true));
             Log.d(TAG, "Recipe: " + recipe);
             recipeViewModel.insert(recipe);
@@ -118,7 +133,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnD
                     data.getStringExtra(EditRecipeActivity.UPDATED_RECIPE_PREPTIME),
                     data.getStringExtra(EditRecipeActivity.UPDATED_RECIPE_COOKTIME),
                     data.getStringExtra(EditRecipeActivity.UPDATED_RECIPE_INGREDIENTS),
-                    data.getStringExtra(EditRecipeActivity.UPDATED_RECIPE_INSTRUCTIONS), null);
+                    data.getStringExtra(EditRecipeActivity.UPDATED_RECIPE_INSTRUCTIONS),
+                    data.getStringExtra(EditRecipeActivity.UPDATED_RECIPE_IMAGE));
             recipeViewModel.update(recipe);
 
             Toast.makeText(
