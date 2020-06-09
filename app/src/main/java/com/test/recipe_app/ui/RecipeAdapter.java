@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,14 +16,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.test.recipe_app.EditRecipeActivity;
 import com.test.recipe_app.MainActivity;
 import com.test.recipe_app.R;
 import com.test.recipe_app.ViewRecipeActivity;
-import com.test.recipe_app.model.EditRecipeViewModel;
 import com.test.recipe_app.model.Recipe;
 
 import java.io.FileNotFoundException;
@@ -42,7 +39,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     private Context mContext;//context of MainActivity
     public List<Recipe> recipeList; //cached copy of recipe items
     private OnDeleteClickListener onDeleteClickListener;
-    EditRecipeViewModel editRecipeViewModel;
 
     public void setRecipe(List<Recipe> recipes) {
         recipeList = recipes;
@@ -83,7 +79,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             }
             Log.d(TAG, "rWantToMake: " + " recipe.getWantToMake" + recipe.getWantToMake());
 
-            recipeViewHolder.recipeTextView.setText(recipe.getRecipe());
+            //recipeViewHolder.recipeTextView.setText(recipe.getRecipe());
             recipeViewHolder.recipeTagTextView.setText("" + recipe.getTag());
 
             try {
@@ -108,8 +104,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
-        public TextView recipeTextView, recipeTagTextView;
-        private ImageView recipeDelete, recipeEdit, recipeImage;
+        public TextView recipeTextView,
+                recipeTagTextView;
+        private ImageView recipeDelete,
+                recipeEdit,
+                recipeImage;
         public int mPosition;
         public ImageButton recipeWantToMake;
         public CardView recipeView;

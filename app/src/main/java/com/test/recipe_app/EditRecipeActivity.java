@@ -20,13 +20,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.test.recipe_app.model.EditRecipeViewModel;
 import com.test.recipe_app.model.Recipe;
 
@@ -61,7 +58,6 @@ public class EditRecipeActivity extends AppCompatActivity {
     private String id;
     private LiveData<Recipe> recipe;
     private ImageView editImage;
-    float cornerRadius = 80.0f;
     private Uri uri;
 
 
@@ -76,7 +72,6 @@ public class EditRecipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //xml underscore
         setContentView(R.layout.activity_edit_recipe);
         getSupportActionBar().setTitle("Edit Recipe");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -115,6 +110,7 @@ public class EditRecipeActivity extends AppCompatActivity {
                     editCookTime.setText(recipe.getCookTime());
                     editIngredients.setText(recipe.getIngredients());
                     editInstructions.setText(recipe.getInstructions());
+                    editImageButton.bringToFront();
 
                     if (recipe.getWantToMake()) {
                         wantToMake = true;
@@ -130,14 +126,8 @@ public class EditRecipeActivity extends AppCompatActivity {
                         InputStream inputStream = getContentResolver().openInputStream(uri);
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         editImage.setImageBitmap(bitmap);
-
-//                        RoundedBitmapDrawable dr = RoundedBitmapDrawableFactory.create(getResources(), bitmap);
-//                        dr.setCornerRadius(cornerRadius);
-//                        editImage.setImageDrawable(dr);
                         editImage.setBackground(null);
-
                         editImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                        editImage.setClipToOutline(true);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -149,21 +139,17 @@ public class EditRecipeActivity extends AppCompatActivity {
             }
         });
 
-        try {
-            editImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityCompat.requestPermissions(
-                            EditRecipeActivity.this,
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_CODE_GALLERY
-                    );
-                }
-            });
+        editImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityCompat.requestPermissions(
+                        EditRecipeActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_CODE_GALLERY
+                );
+            }
+        });
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         editWantToMake.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,6 +184,23 @@ public class EditRecipeActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_CODE_GALLERY) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, REQUEST_CODE_GALLERY);
+            } else {
+                Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     //sends updated recipe to Main Activity & update database

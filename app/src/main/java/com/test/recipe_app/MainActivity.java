@@ -2,9 +2,7 @@ package com.test.recipe_app;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,8 +26,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnD
     private static final String TAG = "MainActivity";
 
     private static final int NEW_RECIPE_REQUEST_CODE = 1;
-    public static final int UPDATE_RECIPE_ACTIVITY_REQUEST_CODE = 2;
-    public static final int VIEW_RECIPE_ACTIVITY_REQUEST_CODE = 3;
+    public static final int UPDATE_RECIPE_ACTIVITY_REQUEST_CODE = 2,
+            VIEW_RECIPE_ACTIVITY_REQUEST_CODE = 3;
     private RecipeAdapter recipeAdapter;
     private RecipeViewModel recipeViewModel;
 
@@ -91,9 +87,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnD
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -120,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.OnD
                     data.getStringExtra(NewRecipeActivity.EXTRA_RECIPE_COOKTIME),
                     data.getStringExtra(NewRecipeActivity.EXTRA_RECIPE_INGREDIENTS),
                     data.getStringExtra(NewRecipeActivity.EXTRA_RECIPE_INSTRUCTIONS),
-                    data.getStringExtra(NewRecipeActivity.IMAGE_URI));
+                    data.getStringExtra(NewRecipeActivity.EXTRA_RECIPE_IMAGE_URI));
             Log.d(TAG, "rWantToMake: " + " data.getBooleanExtra(NewRecipeActivity.EXTRA_RECIPE_WANTTOMAKE" + data.getBooleanExtra(NewRecipeActivity.EXTRA_RECIPE_WANTTOMAKE, true));
             Log.d(TAG, "Recipe: " + recipe);
             recipeViewModel.insert(recipe);

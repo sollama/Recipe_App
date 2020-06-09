@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.test.recipe_app.model.Recipe;
 
-@Database(entities = {Recipe.class}, version = 15)
+@Database(entities = {Recipe.class}, version = 16)
 public abstract class RecipeRoomDatabase extends RoomDatabase {
 
     public static volatile RecipeRoomDatabase INSTANCE;
@@ -53,12 +53,10 @@ public abstract class RecipeRoomDatabase extends RoomDatabase {
         protected Void doInBackground(Void... voids) {
             //recipeDao.deleteAll();
 
-            //for testing
-//            Recipe apple_pie = new Recipe("apple pie");
+            //precreated recipes
+//            Recipe apple_pie = new Recipe(1, "Apple Pie", "Dessert", true, "/drawable/apple_pie");
 //            recipeDao.insert(apple_pie);
-//
-//            Recipe cookie = new Recipe("cookie");
-//            recipeDao.insert(cookie);
+
               return null;
         }
     }

@@ -12,9 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,7 +25,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -42,7 +39,7 @@ public class NewRecipeActivity extends AppCompatActivity {
             EXTRA_RECIPE_PREPTIME = "EXTRA_RECIPE_PREPTIME",
             EXTRA_RECIPE_COOKTIME = "EXTRA_RECIPE_COOKTIME",
             EXTRA_RECIPE_WANTTOMAKE = "EXTRA_RECIPE_WANTTOMAKE",
-            IMAGE_URI = "IMAGE_URI";
+            EXTRA_RECIPE_IMAGE_URI = "IMAGE_URI";
 
     private EditText rName,
             rTag,
@@ -53,9 +50,8 @@ public class NewRecipeActivity extends AppCompatActivity {
     private Button sButton, cButton;
     private ImageButton wantToMakeButton, uploadImage;
     private boolean wantToMake = false;
-    private Toolbar toolbar;
     ImageView recipeImageView;
-    private Uri uri;
+    private Uri uri = null;
 
     @Override
     public void onUserInteraction() {
@@ -83,18 +79,13 @@ public class NewRecipeActivity extends AppCompatActivity {
         cButton = findViewById(R.id.button_cancel);
         uploadImage = findViewById(R.id.upload_image);
         recipeImageView = findViewById(R.id.new_recipe_image);
-        //Log.d(TAG, "rWantToMake: " + " wantToMakeButton" + wantToMakeButton);
 
         rName.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -117,17 +108,6 @@ public class NewRecipeActivity extends AppCompatActivity {
             }
         });
 
-        //choose image from Library
-        uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityCompat.requestPermissions(
-                        NewRecipeActivity.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_CODE_GALLERY
-                );
-            }
-        });
 
         wantToMakeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +119,18 @@ public class NewRecipeActivity extends AppCompatActivity {
                 } else {
                     wantToMakeButton.setImageResource(R.drawable.star_outline_24px);
                 }
+            }
+        });
+
+        //choose image from Library
+        uploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityCompat.requestPermissions(
+                        NewRecipeActivity.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_CODE_GALLERY
+                );
             }
         });
 
@@ -163,12 +155,8 @@ public class NewRecipeActivity extends AppCompatActivity {
                     String recipePrepTimeSt = String.valueOf(rPrepTime.getText());
                     String recipeCookTimeSt = String.valueOf(rCookTime.getText());
                     boolean recipeWantToMake = Boolean.valueOf(wantToMake);
+                    Log.d(TAG, "rIngredients" + rIngredients);
 
-                    //byte[] recipeImage = imageViewToByte(recipeImageView);
-                    Log.d(TAG, "rWantToMake: " + " recipeWantToMake" + recipeWantToMake);
-
-
-                    //Log.d(TAG, "prepTime: " + recipePrepTimeSt + ", recipeIngredientsSt: " + recipeIngredientsSt);
                     replyIntent.putExtra(EXTRA_RECIPE_NAME, recipeNameSt);
                     replyIntent.putExtra(EXTRA_RECIPE_TAG, recipeTagSt);
                     replyIntent.putExtra(EXTRA_RECIPE_INGREDIENTS, recipeIngredientsSt);
@@ -176,9 +164,10 @@ public class NewRecipeActivity extends AppCompatActivity {
                     replyIntent.putExtra(EXTRA_RECIPE_PREPTIME, recipePrepTimeSt);
                     replyIntent.putExtra(EXTRA_RECIPE_COOKTIME, recipeCookTimeSt);
                     replyIntent.putExtra(EXTRA_RECIPE_WANTTOMAKE, recipeWantToMake);
-                    replyIntent.putExtra(IMAGE_URI, uri.toString());
+                    replyIntent.putExtra(EXTRA_RECIPE_IMAGE_URI, uri.toString());
 
                     setResult(RESULT_OK, replyIntent);
+                    Log.d(TAG, "replyIntent" + replyIntent);
                     finish();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -202,7 +191,8 @@ public class NewRecipeActivity extends AppCompatActivity {
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_CODE_GALLERY) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -210,7 +200,9 @@ public class NewRecipeActivity extends AppCompatActivity {
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_CODE_GALLERY);
             } else {
-                Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "You don't have permission to access file location!",
+                        Toast.LENGTH_SHORT).show();
             }
             return;
         }
@@ -224,8 +216,6 @@ public class NewRecipeActivity extends AppCompatActivity {
         //set image
         if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null) {
             uri = data.getData();
-            Log.d(TAG, "uri" + uri);
-            Log.d(TAG, "uri.toString" + uri.toString());
 
             try {
                 InputStream inputStream = getContentResolver().openInputStream(uri);

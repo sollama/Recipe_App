@@ -10,8 +10,6 @@ import androidx.lifecycle.LiveData;
 import com.test.recipe_app.data.RecipeDao;
 import com.test.recipe_app.data.RecipeRoomDatabase;
 
-import java.util.List;
-
 public class EditRecipeViewModel extends AndroidViewModel {
 
     private String TAG = this.getClass().getSimpleName();

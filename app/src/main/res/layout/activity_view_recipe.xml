@@ -37,74 +37,71 @@
 
                 <TextView
                     android:id="@+id/view_tag"
-                    android:layout_width="320dp"
+                    android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat"
                     android:hint="@string/hint_tag"
-                    android:inputType="textAutoComplete"
-                    android:padding="6dp"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="italic" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/view_prepTimeTag"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:fontFamily="@font/montserrat"
+                            android:text="Prep Time"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/view_prepTime"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:fontFamily="@font/montserrat"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/view_cookTimeTag"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:fontFamily="@font/montserrat"
+                            android:text="Cook Time"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/view_cookTime"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/view_wantToMake"
-                    android:layout_width="50dp"
+                    android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="10dp"
                     android:background="#E3ECEB"
-                    android:padding="6dp"
                     app:srcCompat="@drawable/star_outline_24px" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/view_prepTimeTag"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/montserrat"
-                    android:text="Prep Time"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/view_prepTime"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/montserrat"
-                    android:padding="6dp"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/view_cookTimeTag"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/montserrat"
-                    android:text="Cook Time"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/view_cookTime"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/montserrat"
-                    android:padding="6dp"
-                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -115,6 +112,11 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true">
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
                 <FrameLayout
                     android:id="@android:id/tabcontent"
@@ -139,10 +141,6 @@
                             android:inputType="textMultiLine"
                             android:padding="10dp" />
 
-                        <TabWidget
-                            android:id="@android:id/tabs"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
 
                     </LinearLayout>
 

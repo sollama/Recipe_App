@@ -84,8 +84,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
 
                     //Log.d(TAG, "recipe.getTag()" + recipe.getTag());
-
-
                     if (recipe.getWantToMake()) {
                         wantToMake = true;
                         viewWantToMake.setImageResource(R.drawable.star_24px);

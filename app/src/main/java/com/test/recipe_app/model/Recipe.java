@@ -1,7 +1,5 @@
 package com.test.recipe_app.model;
 
-import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
