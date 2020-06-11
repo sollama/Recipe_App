@@ -19,5 +19,5 @@
     <string name="hint_tag">e.g. Breakfast</string>
     <string name="cancel_recipe_button">Cancel</string>
     <string name="update_recipe_button">Update</string>
-    <string name="updated">Note updated</string>
+    <string name="updated">Recipe updated</string>
 </resources>

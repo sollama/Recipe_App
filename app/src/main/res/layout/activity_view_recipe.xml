@@ -152,8 +152,8 @@
 
                         <TextView
                             android:id="@+id/view_instructions"
-                            android:layout_width="wrap_content"
-                            android:layout_height="150dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="60dp"
                             android:background="@drawable/rounded_corner"
                             android:ems="10"
