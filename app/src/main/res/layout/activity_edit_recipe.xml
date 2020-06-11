@@ -170,7 +170,7 @@
         <EditText
             android:id="@+id/edit_ingredients"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/rounded_corner"
             android:ems="10"
             android:gravity="start|top"
@@ -191,7 +191,7 @@
         <EditText
             android:id="@+id/edit_instructions"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/rounded_corner"
             android:ems="10"
             android:gravity="start|top"
